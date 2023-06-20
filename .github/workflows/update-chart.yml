@@ -139,6 +139,8 @@ jobs:
       - name: Commit and Push Changes
         if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true')
         run: |
+          git config user.email "alexander.borschuk@hazelcast.com"
+          git config user.name "aborschuk"
           git checkout -b ${{ env.BRANCH }}
           git add .
           git commit --signoff -m "${{ env.TITLE }}"
