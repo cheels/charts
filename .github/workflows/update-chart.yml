@@ -120,8 +120,8 @@ jobs:
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
               else 
-                echo "No new tag found for HZ in $path. The latest is: $HZ_LATEST_TAG"
-                echo "No new tag found for MC in $path. The latest is: $MC_LATEST_TAG"
+                echo "No new tag found for HZ in '$path' path. The latest is: $HZ_LATEST_TAG"
+                echo "No new tag found for MC in '$path' path. The latest is: $MC_LATEST_TAG"
               fi
             done
           }
