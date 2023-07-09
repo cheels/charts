@@ -165,5 +165,4 @@ jobs:
         run: |
           echo ${{ secrets.PAT }} | gh auth login --with-token
           gh pr create --fill \
-          --label "safe-to-test" \
-          --reviewer "hazelcast/cloud-native"
+          --label "safe-to-test" 
