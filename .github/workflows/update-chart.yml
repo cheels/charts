@@ -156,6 +156,7 @@ jobs:
           git config user.email "alexander.borschuk@hazelcast.com"
           git config user.name "aborschuk"
           git checkout -b ${{ env.BRANCH }}
+          git fetch
           git add .
           git commit --signoff -m "${{ env.TITLE }}"
           git push -u origin ${{ env.BRANCH }}
