@@ -107,25 +107,19 @@ jobs:
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
-              fi
-          
-              if [[ $HZ_LATEST_TAG != $APP_VERSION && $MC_LATEST_TAG == $MC_VERSION ]]; then
+              elif [[ $HZ_LATEST_TAG != $APP_VERSION && $MC_LATEST_TAG == $MC_VERSION ]]; then
                 NEW_CHART_VERSION=$(update_version "$HZ_LATEST_TAG" "$APP_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' -e 's/(appVersion: ).*/\1'\"$HZ_LATEST_TAG\"'/' "$path/Chart.yaml"
                 awk '/^image:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$HZ_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 echo "HZ_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "HZ_UPDATED=true" >> $GITHUB_ENV
-              fi
-          
-              if [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
+              elif [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG != $MC_VERSION ]]; then
                 NEW_CHART_VERSION=$(update_version "$MC_LATEST_TAG" "$MC_VERSION" "$CHART_VERSION")
                 sed -i -E -e 's/(version: ).*/\1'"$NEW_CHART_VERSION"'/' "$path/Chart.yaml"
                 awk '/^mancenter:/ {p=1} p && /tag:/ {sub(/tag:.*/, "tag: \"'$MC_LATEST_TAG'\""); p=0} 1' "$path/values.yaml" > temp.yaml && mv temp.yaml "$path/values.yaml"
                 echo "MC_UPDATED=true" >> $GITHUB_OUTPUT
                 echo "MC_UPDATED=true" >> $GITHUB_ENV
-              fi
-          
-              if [[ $HZ_LATEST_TAG == $APP_VERSION && $MC_LATEST_TAG == $MC_VERSION ]]; then
+              else 
                 echo "No new tag found for HZ. The latest is: $HZ_LATEST_TAG"
                 echo "No new tag found for MC. The latest is: $MC_LATEST_TAG"
               fi
@@ -153,10 +147,9 @@ jobs:
       - name: Commit and Push Changes
         if: (steps.update_version.outputs.HZ_UPDATED == 'true' || steps.update_version.outputs.MC_UPDATED == 'true')
         run: |
-          git config user.email "alexander.borschuk@hazelcast.com"
-          git config user.name "aborschuk"
+          git config user.email "devopshelm@hazelcast.com"
+          git config user.name "devOpsHelm"
           git checkout -b ${{ env.BRANCH }}
-          git fetch
           git add .
           git commit --signoff -m "${{ env.TITLE }}"
           git push -u origin ${{ env.BRANCH }}
@@ -166,4 +159,4 @@ jobs:
         run: |
           echo ${{ secrets.PAT }} | gh auth login --with-token
           gh pr create --fill \
-          --label "safe-to-test" 
+          --label "safe-to-test"
